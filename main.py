@@ -4,6 +4,7 @@ import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 import string
+import copy
 
 
 def deEmojify(inputString):
@@ -41,6 +42,17 @@ def preProcessString(inputString):
 
 with open('data_expanded.json', encoding='utf-8') as handle:
     dictionary = json.loads(handle.read())
-    for tweet in dictionary:
-        print(tweet['tweet_id'])
-        print(preProcessString(tweet['text']))
+
+dictionary_clone = copy.deepcopy(dictionary)
+
+index = 0
+for tweet in dictionary:
+    dictionary_clone[index]["text"] = preProcessString(tweet['text'])
+    dictionary_clone[index].pop("hashtags_count", None)
+    dictionary_clone[index].pop("characters", None)
+    dictionary_clone[index].pop("tweet_id", None)
+    index = index + 1
+
+with open('final.json', 'w', encoding='utf-8') as f:
+    json.dump(dictionary_clone, f, ensure_ascii=False, indent=4)
+

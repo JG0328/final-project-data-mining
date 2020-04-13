@@ -4,10 +4,10 @@ from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn import naive_bayes
-from sklearn.metrics import roc_auc_score 
+from sklearn.metrics import accuracy_score 
 import numpy as np 
 import copy 
-
+import json
 
 df=pd.read_csv("final1.csv")
 
@@ -22,15 +22,29 @@ tweets_train, tweets_test, sentiment_train, sentiment_test = train_test_split(tw
 classifier = naive_bayes.MultinomialNB()
 classifier.fit(tweets_train, sentiment_train)
 
+sentiment_predicted = classifier.predict(tweets_test)
 
-tweet = np.array(["tune two funniest sports presenters best sports entertainment hbd corona day r g g kussh", "yogi children lessor god barbarism yogi government disgusting people need quarantine amp treatment infected"])
-
-vector = vectorizer.transform(tweet)
-
-print(classifier.predict(vector))
-
+data = []
+for text, sentiment in zip(tweets_test, sentiment_predicted):
+    print(text)
+    data.append({"sentiment": sentiment })
 
 
+with open('predicted.json', 'w', encoding='utf-8') as f:
+    json.dump(data, f, ensure_ascii=False, indent=4)
+
+
+
+
+print(accuracy_score(sentiment_test, sentiment_predicted))
+
+
+
+
+
+#tweet = np.array(["criminals getting bailed jail since years due corona concern innocent sant still jail since years even years old s time", "yogi children lessor god barbarism yogi government disgusting people need quarantine amp treatment infected"])
+#vector = vectorizer.transform(tweet)
+#print(classifier.predict(vector))
 
 
 

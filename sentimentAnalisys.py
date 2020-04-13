@@ -45,37 +45,3 @@ print(accuracy_score(sentiment_test, sentiment_predicted))
 #tweet = np.array(["criminals getting bailed jail since years due corona concern innocent sant still jail since years even years old s time", "yogi children lessor god barbarism yogi government disgusting people need quarantine amp treatment infected"])
 #vector = vectorizer.transform(tweet)
 #print(classifier.predict(vector))
-
-
-
-'''
-
-def buildVocabulary(preprocessedTrainingData):
-    all_words = []
-    for tweet in preprocessedTrainingData:
-        all_words.extend(tweet["text"])
-    wordlist = nltk.FreqDist(all_words)
-    return wordlist.keys()
-
-def extract_features(tweet):
-    tweet_words = set(tweet)
-    features = {}
-    for word in word_features:
-        features['contains(%s)' % word] = (word in tweet_words)
-    return features 
-
-
-dictionary = []
-
-with open('final.json', encoding='utf-8') as handle:
-    dictionary = json.loads(handle.read())
-
-word_features = buildVocabulary(dictionary)
-
-preprocessedTrainingData = []
-for tweet in dictionary:
-    preprocessedTrainingData.append((tweet["text"], tweet["sentiment_label"]))
-
-trainingFeatures = nltk.classify.apply_features(extract_features, preprocessedTrainingData)
-print(trainingFeatures)
-'''

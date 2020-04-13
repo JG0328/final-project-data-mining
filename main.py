@@ -19,6 +19,7 @@ def preProcessString(inputString):
         r'[-a-zA-Z0–9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0–9@:%_\+.~#?&//=]*)', '', inputString, flags=re.MULTILINE)
     inputString = re.sub(r"#(\w+)", ' ', inputString, flags=re.MULTILINE)
     inputString = re.sub(r"@(\w+)", ' ', inputString, flags=re.MULTILINE)
+    inputString = re.sub(r"[0-9]", ' ', inputString, flags=re.MULTILINE)
 
     inputString = inputString.lower()
 
@@ -47,10 +48,19 @@ dictionary_clone = copy.deepcopy(dictionary)
 
 index = 0
 for tweet in dictionary:
-    dictionary_clone[index]["text"] = preProcessString(tweet['text'])
+    dictionary_clone[index]["text"] = str(preProcessString(tweet['text']))
+    dictionary_clone[index]["hashtags"] = " ".join(str(x) for x in dictionary_clone[index]["hashtags"])
+    if float(dictionary_clone[index]["sentiment"]) >= -1 and float(dictionary_clone[index]["sentiment"]) < -0.15:
+        dictionary_clone[index]["sentiment_label"] = "negative"
+    elif float(dictionary_clone[index]["sentiment"]) >= -0.15 and float(dictionary_clone[index]["sentiment"]) < 0.15:
+        dictionary_clone[index]["sentiment_label"] = "neutral"
+    elif float(dictionary_clone[index]["sentiment"]) >= 0.15:
+        dictionary_clone[index]["sentiment_label"] = "positive"
+
     dictionary_clone[index].pop("hashtags_count", None)
     dictionary_clone[index].pop("characters", None)
     dictionary_clone[index].pop("tweet_id", None)
+    
     index = index + 1
 
 with open('final.json', 'w', encoding='utf-8') as f:
